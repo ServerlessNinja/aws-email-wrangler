@@ -1,0 +1,6 @@
+{
+  "config": {
+    "domain": "aws.serverless.ninja",
+    "mailbox": "documents@aws.serverless.ninja"
+  }
+}
