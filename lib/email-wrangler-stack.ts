@@ -136,5 +136,19 @@ export class EmailWranglerStack extends cdk.Stack {
       ],
     });
 
+    // Output for S3 Bucket name
+    new cdk.CfnOutput(this, 'SesBucketNameOut', {
+      value: mailBucket.bucketName,
+      description: 'Name of S3 bucket storing SES emails',
+      exportName: 'SesBucketName'
+    });
+
+    // Output for S3 Bucket name
+    new cdk.CfnOutput(this, 'SesFnNameOut', {
+      value: sesFn.functionName,
+      description: 'Name of Lambda function for processing',
+      exportName: 'SesFnName'
+    });
+
   }
 }
