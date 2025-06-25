@@ -8,8 +8,9 @@ import * as destinations from 'aws-cdk-lib/aws-lambda-destinations';
 import * as events from 'aws-cdk-lib/aws-events';
 import * as targets from 'aws-cdk-lib/aws-events-targets';
 import * as logs from 'aws-cdk-lib/aws-logs';
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 
 export interface ContextProps extends cdk.StackProps {
   config: {
@@ -150,5 +151,28 @@ export class EmailWranglerStack extends cdk.Stack {
       exportName: 'SesFnName'
     });
 
+    // Create CloudWatch Dashboard
+    const dashboard = new cdk.aws_cloudwatch.Dashboard(this, 'EmailWranglerDashboard', {
+      dashboardName: 'EmailWranglerLogs',
+      defaultInterval: cdk.Duration.days(1),
+    });
+
+    // Add CloudWatch Widget for Logs Insight query
+    dashboard.addWidgets(
+      new cloudwatch.LogQueryWidget({
+        title: '[SES] Extracted Attachments',
+        logGroupNames: [sesFn.logGroup.logGroupName],
+        view: cdk.aws_cloudwatch.LogQueryVisualizationType.TABLE,
+        region: this.region,
+        width: 24,
+        height: 12,
+        queryLines: [
+          'fields DocumentId, FileName, Size, CreatedAt, Location',
+          'filter ispresent(DocumentId)',
+          'sort @timestamp desc'
+        ]
+      })
+    );
+  
   }
 }
