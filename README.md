@@ -1,6 +1,6 @@
 # SES Email Wrangler
 
-This AWS based solution extracts document attachemnts from e-mails sent to dedicated virtual mailbox. Solution relies on integration of following AWS services: SES + S3 + Lambda + EventBridge + CloudWatch. This repository is an AWS Cloud Development Kit (AWS CDK) application written in TypeScript, and deploys a single CloudFormation stack into single AWS account/region.
+AWS serverless solution to extract document attachemnts from e-mails sent to a virtual mailbox. The solution relies on integration of following AWS services: SES + S3 + Lambda + EventBridge + CloudWatch. This repository is an AWS Cloud Development Kit (AWS CDK) application written in TypeScript.
 
 ## How it works?
 
@@ -29,8 +29,8 @@ flowchart LR
     subgraph AWSR["AWS Region"]
         SES["SES Receipt Rule"]
         S3["S3 Bucket"]
-        Lambda["Lambda function"]
-        EventBus["EventBridge bus"]
+        Lambda["Lambda Function"]
+        EventBus["EventBridge Bus"]
         Logs1["Log Group"]
         Logs2["Log Group"]
         Dashboard["Dashboard"]
@@ -97,7 +97,7 @@ npx cdk synth --all
 npx cdk deploy --all
 ```
 
-The CDK app will deploy single CloudFormation stack `EmailWranglerStack`.
+The CDK app will deploy single CloudFormation stack called `EmailWranglerStack`.
 
 ## How to clean it up?
 
@@ -107,4 +107,4 @@ Run the following CLI command to **destroy** the CDK App (to remove CF stacks fr
 npx cdk destroy --force
 ```
 
-Alternatively, delete the CloudFormation stack `EmailWranglerStack`.
+Alternatively, open AWS Management Console -> CloudFormation -> Stacks, and simply delete the CloudFormation stack called `EmailWranglerStack`.
