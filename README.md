@@ -1,4 +1,4 @@
-# SES Email Wrangler
+# Email Wrangler
 
 AWS serverless solution to extract document attachemnts from e-mails sent to a virtual mailbox. The solution relies on integration of following AWS services: SES + S3 + Lambda + EventBridge + CloudWatch. This repository is an AWS Cloud Development Kit (AWS CDK) application written in TypeScript.
 
