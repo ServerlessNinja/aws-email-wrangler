@@ -87,8 +87,14 @@ export class EmailWranglerStack extends cdk.Stack {
     // Grant the Lambda function read/write access to the S3 bucket
     mailBucket.grantReadWrite(sesFn);
 
+    // Create CloudWatch Log Group for Event Bus
+    const eventBusLogs = new logs.LogGroup(this, 'SesExtractorDestEvents', {
+      logGroupName: `/aws/events/${eventBus.eventBusName}`,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    })
+
     // Create an EventBridge rule to capture Lambda destination events
-    new events.Rule(this, 'SesExtractorDest', {
+    const eventRule = new events.Rule(this, 'SesExtractorDest', {
       description: 'Capture SesExtractor function invocation results',
       eventBus: eventBus,
       eventPattern: {
@@ -102,12 +108,7 @@ export class EmailWranglerStack extends cdk.Stack {
         }
       },
       targets: [
-        new targets.CloudWatchLogGroup(
-          new logs.LogGroup(this, 'SesExtractorDestEvents', {
-            logGroupName: `/aws/events/${eventBus.eventBusName}`,
-            removalPolicy: cdk.RemovalPolicy.DESTROY,
-          })
-        )
+        new targets.CloudWatchLogGroup(eventBusLogs)
       ]
     });
 
@@ -153,19 +154,35 @@ export class EmailWranglerStack extends cdk.Stack {
 
     // Create CloudWatch Dashboard
     const dashboard = new cdk.aws_cloudwatch.Dashboard(this, 'EmailWranglerDashboard', {
-      dashboardName: 'EmailWranglerLogs',
+      dashboardName: 'Email Wrangler: Logs Insights',
       defaultInterval: cdk.Duration.days(1),
     });
 
     // Add CloudWatch Widget for Logs Insight query
     dashboard.addWidgets(
       new cloudwatch.LogQueryWidget({
-        title: '[SES] Extracted Attachments',
-        logGroupNames: [sesFn.logGroup.logGroupName],
+        title: 'Lambda Destination Events',
+        logGroupNames: [ eventBusLogs.logGroupName ],
         view: cdk.aws_cloudwatch.LogQueryVisualizationType.TABLE,
         region: this.region,
         width: 24,
-        height: 12,
+        height: 6,
+        queryLines: [
+          'fields @timestamp as Timestamp, detail.requestContext.condition as Status, detail.responsePayload.DocumentCount as Documents, @message as Message',
+          'sort @timestamp desc'
+        ]
+      })
+    );
+
+    // Add CloudWatch Widget for Logs Insight query
+    dashboard.addWidgets(
+      new cloudwatch.LogQueryWidget({
+        title: 'Extracted Attachments',
+        logGroupNames: [ sesFn.logGroup.logGroupName ],
+        view: cdk.aws_cloudwatch.LogQueryVisualizationType.TABLE,
+        region: this.region,
+        width: 24,
+        height: 6,
         queryLines: [
           'fields DocumentId, FileName, Size, CreatedAt, Location',
           'filter ispresent(DocumentId)',
