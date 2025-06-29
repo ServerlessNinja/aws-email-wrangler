@@ -51,10 +51,8 @@ flowchart LR
 Prerequisites:
 
 - Amazon Route 53 Public Hosted Zone defined in your AWS Account
-  - You can purchase a new domain in Amazon Route 53:
-    https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html 
-  - You can delegate a subdomain from your domain registrar to Route 53 Name Servers:
-    https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-configuring-new-domain.html
+  - You can purchase a new domain in Amazon Route 53: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html 
+  - You can delegate a subdomain from your domain registrar to Route 53 Name Servers: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-configuring-new-domain.html
 
 1. Identify your existing Route 53 Public Hosted Zone, for example: 
 
@@ -73,25 +71,26 @@ aws.serverless.ninja
 }
 ```
 
-3. Authenticate to AWS and store your static/temporary credentials in AWS CLI Profile:
-   https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html
+3. Authenticate to AWS and store your static/temporary credentials in AWS CLI Profile: https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html
 
-Export the environment variables for your AWS CLI configuration, these variables will be used by AWS CDK to identify the AWS account and region for deployments, for example:
+Export environment variables for your AWS CLI configuration, these variables will be used by AWS CDK to identify the AWS account and region for deployments, for example:
 
 ```bash
 export AWS_PROFILE=123456789012_DeveloperRole
 export AWS_REGION=eu-west-1
 ```
 
-5. Run the following CLI commands to build, synthesize, and **deploy** the CDK App (to create/update CF stacks in your AWS account)
+4. Run the following CLI commands to build, synthesize, and **deploy** the CDK App (to create/update CF stacks in your AWS account)
 
-Install and build NPM packages
+Install and build NPM packages:
+
 ```bash
 npm install
 npm run build
 ```
 
 Synthesize and deploy AWS CDK App:
+
 ```bash
 npx cdk synth --all
 npx cdk deploy --all
