@@ -1,6 +1,6 @@
 # Email Wrangler
 
-AWS serverless solution to extract document attachemnts from e-mails sent to a virtual mailbox. The solution relies on integration of following AWS services: SES + S3 + Lambda + EventBridge + CloudWatch. This repository is an AWS Cloud Development Kit (AWS CDK) application written in TypeScript.
+AWS serverless solution to extract document attachements from e-mails sent to a virtual mailbox. The solution relies on integration of following AWS services: SES + S3 + Lambda + EventBridge + CloudWatch. This repository is an AWS Cloud Development Kit (AWS CDK) application written in TypeScript.
 
 ## How it works?
 
@@ -11,7 +11,7 @@ Solution walkthrough:
 3. SES Receipt Rule invokes the Lambda function and passes metadata about EML file in context
 4. Lambda function loads the EML file from S3 bucket, extracts document attachments (selected content type), and saves them back to S3 bucket in the `attachments/` folder.
 5. Lambda execution logs are streamed to a dedicated CloudWatch Log Group
-6. EventBridge custom Bus is configured as Lambda Destination to collect events emitted on Lambda fucntion execution success/failure
+6. EventBridge custom Bus is configured as Lambda Destination to collect events emitted on Lambda function's successful and failed executions
 7. EventBridge Rule target is configured to stream the events to a dedicated CloudWAtch Log Group
 8. CloudWatch Dashboard uses CloudWatch Log Insights to query for execution and destination logs to show number of successfull or failed Lambda function executions, as well as number of extracted document attachments from the EML files.
 
@@ -31,6 +31,7 @@ flowchart LR
         S3["S3 Bucket"]
         Lambda["Lambda Function"]
         EventBus["EventBridge Bus"]
+        StepFunctions["Step Functions Workflow"]
         Logs1["Log Group"]
         Logs2["Log Group"]
         Dashboard["Dashboard"]
@@ -42,6 +43,7 @@ flowchart LR
     Lambda -- Destinations --> EventBus
     Lambda -- Executions --> Logs1
     EventBus -- Events --> Logs2
+    EventBus -- Events --> StepFunctions
     Logs1 -- Log Insights --> Dashboard
     Logs2 -- Log Insights --> Dashboard
 ```
