@@ -31,7 +31,6 @@ flowchart LR
         S3["S3 Bucket"]
         Lambda["Lambda Function"]
         EventBus["EventBridge Bus"]
-        StepFunctions["Step Functions Workflow"]
         Logs1["Log Group"]
         Logs2["Log Group"]
         Dashboard["Dashboard"]
@@ -43,7 +42,6 @@ flowchart LR
     Lambda -- Destinations --> EventBus
     Lambda -- Executions --> Logs1
     EventBus -- Events --> Logs2
-    EventBus -- Events --> StepFunctions
     Logs1 -- Log Insights --> Dashboard
     Logs2 -- Log Insights --> Dashboard
 ```
@@ -99,6 +97,12 @@ npx cdk deploy --all
 ```
 
 The CDK app will deploy single CloudFormation stack called `EmailWranglerStack`.
+
+## How to modify it?
+
+EventBridge Bus receives events from Lambda Destinations for successfull and failed executions of Lambda function. You can create an extra Event Rule to catch only the successful executions.
+
+Make sure to input the `$.detail.documents` (JSON Path) to the Event Target. This is to pass to the target service (for example Step Functions workflow) only part of the event: output of the Lambda function.
 
 ## How to clean it up?
 
