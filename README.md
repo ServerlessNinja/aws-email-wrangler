@@ -31,6 +31,7 @@ flowchart LR
         S3["S3 Bucket"]
         Lambda["Lambda Function"]
         EventBus["EventBridge Bus"]
+        OtherService["Other Service"]
         Logs1["Log Group"]
         Logs2["Log Group"]
         Dashboard["Dashboard"]
@@ -42,6 +43,7 @@ flowchart LR
     Lambda -- Destinations --> EventBus
     Lambda -- Executions --> Logs1
     EventBus -- Events --> Logs2
+    EventBus -- Documents --> OtherService
     Logs1 -- Log Insights --> Dashboard
     Logs2 -- Log Insights --> Dashboard
 ```
