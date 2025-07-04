@@ -7,8 +7,8 @@ const simpleParser = require('mailparser').simpleParser;
 const uuid = require('uuid');
 
 const bucketName: string = process.env.BUCKET_EMAILS || '';
-const folderIn: string = process.env.FOLDER_INCOMING || '';;
-const folderOut: string = process.env.FOLDER_ATTACHMENTS || '';;
+const folderIn: string = process.env.FOLDER_INCOMING || '';
+const folderOut: string = process.env.FOLDER_ATTACHMENTS || '';
 
 export const handler = async (event: SESEvent, context: Context) => {
 
