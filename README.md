@@ -100,11 +100,11 @@ npx cdk deploy --all
 
 The CDK app will deploy single CloudFormation stack called `EmailWranglerStack`.
 
-### How to make it fancy?
+## How to make it fancy?
 
-EventBridge Bus receives events from Lambda Destinations for successfull and failed executions of Lambda function. You can create an extra Event Rule to catch only the successful executions.
+EventBridge Bus receives events from Lambda Destinations for successfull and failed executions of Lambda function. You can create an extra Event Rule to catch only the successful executions. You can pass them to other services (supported as Event Rule Target) for further processing, for example to Step Functions workflow.
 
-Make sure to input the `$.detail.documents` (JSON Path) to the Event Rule Target. This is to pass to the target service only part of the event: output of the Lambda function. You can then pass it to any service suported as Event Rule Target for further processing, for example: Step Functions workflow.
+Make sure to input the `$.detail.documents` (JSON Path) to the Event Rule Target. This is to pass to the target service only part of the event, the output of the Lambda function (represented on diagram by Documents to Other Service).
 
 ## How to clean it up?
 
